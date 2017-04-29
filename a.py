@@ -56,7 +56,7 @@ def ReadAsin():
 	extracted_data = []
   	connection = urllib.urlopen('http://www.shopclues.com/search?q=htc&sc_z=2222&z=0')
 	dom =  lxml.html.fromstring(connection.read())
-	for link in dom.xpath('//div[@class='column col3']/descendant::*[@href][1]/@href'): # select the url in href for all a tags(links)
+	for link in dom.xpath('/div[contains(@class,"column col3")]/a[1]/@href'): # select the url in href for all a tags(links)
 		genList.append(link)
 		for i in genList:
         	url = "http://www.shopclues.com" + i
@@ -68,3 +68,5 @@ def ReadAsin():
     
 if __name__ == "__main__":
 	ReadAsin()
+
+
