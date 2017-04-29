@@ -5,8 +5,6 @@ from exceptions import ValueError
 from time import sleep
 import urllib
 import lxml.html
-from BeautifulSoup import BeautifulSoup
-import re
 
 
 genList = []
@@ -54,17 +52,18 @@ def ShopcluesParser(url):
 def ReadAsin():
     # AsinList = csv.DictReader(open(os.path.join(os.path.dirname(__file__),"Asinfeed.csv")))
 	extracted_data = []
-  	connection = urllib.urlopen('http://www.shopclues.com/search?q=htc&sc_z=2222&z=0')
-	dom =  lxml.html.fromstring(connection.read())
-	for link in dom.xpath('//div[@class='column col3']/descendant::*[@href][1]/@href'): # select the url in href for all a tags(links)
-		genList.append(link)
-		for i in genList:
-        	url = "http://www.shopclues.com" + i
-        	print "Processing: " + url
-        	extracted_data.append(ShopcluesParser(url))
-    	sleep(5)
-    	f = open('mama.json', 'w')
-    	json.dump(extracted_data, f, indent=4)
-    
-if __name__ == "__main__":
-	ReadAsin()
+	for i in genList:
+		url = i
+	print "Processing: "+url
+	extracted_data.append(ShopcluesParser(url))
+	sleep(5)
+	f=open('mama.json','w')
+	json.dump(extracted_data,f,indent=1)
+
+connection = urllib.urlopen('http://www.shopclues.com/search?q=htc&sc_z=2222&z=0')
+
+dom =  lxml.html.fromstring(connection.read())
+for link in dom.xpath("//div[@class='column col3']/descendant::*[@href][1]/@href"):
+	genList.append(link)
+
+ReadAsin()
