@@ -3,8 +3,12 @@ import csv,os,json
 import requests
 from exceptions import ValueError
 from time import sleep
+import urllib
+import lxml.html
+
+AsinList = []
  
-def AmzonParser(url):
+def AmazonParser(url):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
     page = requests.get(url,headers=headers)
     while True:
@@ -49,17 +53,19 @@ def AmzonParser(url):
  
 def ReadAsin():
     # AsinList = csv.DictReader(open(os.path.join(os.path.dirname(__file__),"Asinfeed.csv")))
-    AsinList = ['B015HQ9SI6',]
     extracted_data = []
     for i in AsinList:
         url = "http://www.amazon.in/dp/"+i
         print "Processing: "+url
-        print "hello"
-        extracted_data.append(AmzonParser(url))
+        extracted_data.append(AmazonParser(url))
         sleep(5)
     f=open('data.json','w')
     json.dump(extracted_data,f,indent=4)
- 
- 
-if __name__ == "__main__":
-    ReadAsin()
+
+connection = urllib.urlopen('http://www.amazon.in/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=iphone')
+
+dom =  lxml.html.fromstring(connection.read())
+for link in dom.xpath('//li[@id="result_0"]/@data-asin'): # select the url in href for all a tags(links)
+	AsinList.append(link)
+ReadAsin()
+    
