@@ -54,6 +54,7 @@ def ReadAsin():
     for i in AsinList:
         url = "http://www.amazon.in/dp/"+i
         print "Processing: "+url
+        print "hello"
         extracted_data.append(AmzonParser(url))
         sleep(5)
     f=open('data.json','w')
