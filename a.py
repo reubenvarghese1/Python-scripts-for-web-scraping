@@ -10,6 +10,7 @@ genList_shopclues = []
 extracted_data_shopclues = []
 data = []
 papa = None
+shoplist = []
 
 
 def ShopcluesParser(url):
@@ -46,11 +47,10 @@ def ShopcluesParser(url):
         'DISCOUNTED_PRICE': DISCOUNTED_PRICE,
         'SALE_PRICE': SALE_PRICE,
         'ORIGINAL_PRICE': ORIGINAL_PRICE,
-        'ORIGINAL_PRICE': ORIGINAL_PRICE,
         'DISCOUNT': DISCOUNT,
         'URL': url,
     }
-
+    shoplist.append(data)
     return data
 
 
@@ -68,8 +68,10 @@ def ReadAsin_shopclues():
 
 def Initial_shopclues(data):
     urlprod = "http://www.shopclues.com/search?q=" + data + "&sc_z=2222&z=0"
-    connection = urllib.urlopen(urlprod)
-    dom = lxml.html.fromstring(connection.read())
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0 '}
+    page = requests.get(urlprod, headers=headers)
+    dom = html.fromstring(page.content)
     for link in dom.xpath("//div[@class='column col3']/descendant::*[@href][1]/@href"):
         genList_shopclues.append(link)
     ReadAsin_shopclues()
@@ -81,9 +83,16 @@ b = raw_input()
 data.append(a)
 data.append(b)
 i = 0
+j = 0
 while i < len(data):
     print "Inside link no" + str(i)
     Initial_shopclues(data[i])
     i = i + 1
+while j < len(data):
+    dasta = extracted_data_shopclues[j]
+    print dasta["NAME"]
+    j = j +1
+
+
 f = open('mama.json', 'w')
 json.dump(extracted_data_shopclues, f, indent=1)
