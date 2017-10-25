@@ -3,7 +3,8 @@ import csv,os,json
 import requests
 from exceptions import ValueError
 from time import sleep
- 
+
+#Basically Helps parse details from amazon
 def AmzonParser(url):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
     page = requests.get(url,headers=headers)
